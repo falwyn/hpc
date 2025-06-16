@@ -1,3 +1,7 @@
+// SellComputer.java
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class SellComputer {
@@ -24,13 +28,53 @@ public class SellComputer {
 
         if (quantityToSell <= 0) {
             System.out.println("Số lượng bán phải lớn hơn 0.");
-        } else if (computerToSell.getQuantity() < quantityToSell) {
-            System.out.println("Không đủ hàng. Chỉ còn " + computerToSell.getQuantity() + " sản phẩm.");
-        } else {
-            computerToSell.setQuantity(computerToSell.getQuantity() - quantityToSell);
-            float revenueFromSale = computerToSell.getPrice() * quantityToSell;
-            store.addRevenue(revenueFromSale);
-            System.out.println("Bán thành công " + quantityToSell + " sản phẩm. Doanh thu tăng: " + String.format("%,.0f", revenueFromSale) + " VND.");
+            return;
         }
+        if (computerToSell.getQuantity() < quantityToSell) {
+            System.out.println("Không đủ hàng. Chỉ còn " + computerToSell.getQuantity() + " sản phẩm.");
+            return;
+        }
+
+        LocalDate saleDate;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (true) {
+            System.out.print("Nhập ngày bán (định dạng dd/MM/yyyy): " + ": ");
+            String dateString = scanner.nextLine();
+            try {
+                saleDate = LocalDate.parse(dateString, formatter);
+                break; 
+            } catch (DateTimeParseException e) {
+                System.out.println(" Định dạng ngày không hợp lệ. Vui lòng nhập lại.");
+            }
+        }
+
+        LocalDate today = LocalDate.now();
+        boolean isDiscounted = saleDate.equals(today);
+
+        float basePrice = computerToSell.getPrice();
+        float finalPricePerUnit = basePrice;
+
+        if (isDiscounted) {
+            finalPricePerUnit = basePrice * 0.90f;
+            System.out.println("Giao dịch vào ngày hôm nay! Đơn hàng được giảm giá 10%.");
+        }
+
+        float totalSaleAmount = finalPricePerUnit * quantityToSell;
+
+        computerToSell.setQuantity(computerToSell.getQuantity() - quantityToSell);
+
+        SaleRecord record = new SaleRecord(
+                computerToSell.getId(),
+                computerToSell.getName(),
+                quantityToSell,
+                basePrice,
+                totalSaleAmount,
+                saleDate, 
+                isDiscounted
+        );
+
+        store.addSaleRecord(record);
+
+        System.out.printf("Bán thành công! Tổng tiền: %,.0f VND.%n", totalSaleAmount);
     }
 }

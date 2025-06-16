@@ -1,4 +1,3 @@
-// AddComputer.java
 import java.util.Scanner;
 
 public class AddComputer {
@@ -27,8 +26,8 @@ public class AddComputer {
         System.out.print("Nhập số lượng: ");
         int quantity = scanner.nextInt();
 
-        if (quantity <= 0) {
-          System.out.println("Lỗi: Số lượng sản phẩm phải lớn hơn 0");
+        if (quantity < 0) {
+          System.out.println("Lỗi: Số lượng sản phải là số dương");
         }
         scanner.nextLine(); 
 
