@@ -69,6 +69,7 @@
               pandas
               matplotlib
               seaborn
+              unicurses
 
               /* Add whatever else you'd like here. */
               #pkgs.basedpyright
