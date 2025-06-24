@@ -70,6 +70,7 @@
               matplotlib
               seaborn
               unicurses
+              sklearn-compat
 
               /* Add whatever else you'd like here. */
               #pkgs.basedpyright
